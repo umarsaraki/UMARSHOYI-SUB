@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Auth</title>
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+  body {
+    background: linear-gradient(180deg, #2563EB 0%, #1E40AF 100%);
+    min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px;
+  }
+  .card {
+    background: white; border-radius: 20px; padding: 30px 20px; width: 100%; max-width: 400px;
+    position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  }
+  .logo {
+    width: 80px; height: 80px; background: linear-gradient(135deg, #2563EB, #1E40AF);
+    border-radius: 20px; transform: rotate(45deg); position: absolute;
+    top: -40px; left: 50%; margin-left: -40px; display: flex; justify-content: center; align-items: center;
+  }
+  .logo img { width: 50px; height: 50px; border-radius: 50%; transform: rotate(-45deg); }
+  .tabs { display: flex; justify-content: center; margin: 40px 0 20px; }
+  .tab {
+    padding: 10px 30px; cursor: pointer; font-weight: bold; color: #888;
+    border-bottom: 3px solid transparent;
+  }
+  .tab.active { color: #1E3A8A; border-bottom: 3px solid #1E3A8A; }
+  .form { display: none; }
+  .form.active { display: block; }
+  .input-box { position: relative; margin-bottom: 15px; }
+  .input-box input {
+    width: 100%; padding: 15px 45px 15px 15px;
+    border: 1px solid #ddd; border-radius: 10px; font-size: 16px; outline: none;
+  }
+  .input-box .icon { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: #888; }
+  .btn {
+    width: 100%; padding: 16px; background: #1E3A8A; color: white; border: none;
+    border-radius: 10px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 10px;
+  }
+  .btn:disabled { background: #aaa; }
+  .forgot { color: #2563EB; text-decoration: none; font-size: 14px; display: block; margin-bottom: 15px; }
+  .terms { text-align: center; font-size: 12px; color: #666; margin-top: 15px; }
+  .msg { text-align:center; padding:10px; border-radius:8px; margin-bottom:10px; font-size:14px; }
+  .error { background:#fee; color:#c00; }
+  .success { background:#efe; color:#060; }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="logo"><img src="your-logo.png" alt="Logo"></div>
+  
+  <div class="tabs">
+    <div class="tab active" onclick="showForm('login', event)">Login</div>
+    <div class="tab" onclick="showForm('register', event)">Sign Up</div>
+  </div>
+
+  <div id="msg"></div>
+
+  <!-- LOGIN FORM -->
+  <form class="form active" id="login">
+    <h1 style="text-align:center;">Login</h1>
+    <p style="text-align:center; color:#666; margin-bottom:20px;">Login to your account</p>
+    <div class="input-box"><input type="email" id="loginEmail" placeholder="Email" required></div>
+    <div class="input-box">
+      <input type="password" id="loginPass" placeholder="Password" required>
+      <span class="icon" onclick="togglePass('loginPass')">👁️</span>
+    </div>
+    <a href="#" class="forgot">Forgot Password?</a>
+    <button type="submit" class="btn" id="loginBtn">Login</button>
+  </form>
+
+  <!-- REGISTER FORM -->
+  <form class="form" id="register">
+    <h1 style="text-align:center;">Get Started</h1>
+    <p style="text-align:center; color:#666; margin-bottom:20px;">Register an account</p>
+    <div class="input-box"><input type="text" id="fullName" placeholder="Full Name" required><span class="icon">👤</span></div>
+    <div class="input-box"><input type="text" id="username" placeholder="Username" required><span class="icon">👤</span></div>
+    <div class="input-box"><input type="tel" id="phone" placeholder="Phone Number" required><span class="icon">📞</span></div>
+    <div class="input-box"><input type="email" id="regEmail" placeholder="Email" required><span class="icon">✉️</span></div>
+    <div class="input-box"><input type="text" id="referral" placeholder="Referral Username"><span class="icon">👤</span></div>
+    <div class="input-box">
+      <input type="password" id="regPass" placeholder="Password" required><span class="icon">🔒</span>
+    </div>
+    <div class="input-box">
+      <input type="password" id="confirmPass" placeholder="Confirm Password" required><span class="icon">🔒</span>
+    </div>
+    <button type="submit" class="btn" id="regBtn">Continue</button>
+    <p class="terms">By continue you agree with our terms and conditions</p>
+  </form>
+</div>
+
+<!-- SUPABASE SCRIPT -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = 'https://lvlbxliuqrgyizxjmmyx.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_FK1qQm9lnXyRLEG1FaZ6sA__p6lsJfh';
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+function showMsg(text, type){
+  document.getElementById('msg').innerHTML = `<div class="msg ${type}">${text}</div>`;
+  setTimeout(()=> document.getElementById('msg').innerHTML = '', 4000);
+}
+
+function showForm(formId, event) {
+  document.querySelectorAll('.form').forEach(f => f.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(formId).classList.add('active');
+  event.target.classList.add('active');
+}
+function togglePass(id){
+  let x = document.getElementById(id);
+  x.type = x.type === 'password' ? 'text' : 'password';
+}
+
+// REGISTER
+document.getElementById('register').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = document.getElementById('regBtn');
+  btn.disabled = true; btn.innerText = 'Loading...';
+  
+  const email = document.getElementById('regEmail').value;
+  const password = document.getElementById('regPass').value;
+  const confirm = document.getElementById('confirmPass').value;
+  const fullName = document.getElementById('fullName').value;
+  const username = document.getElementById('username').value;
+
+  if(password !== confirm){ showMsg('Passwords ba su yi daidai ba', 'error'); btn.disabled=false; btn.innerText='Continue'; return; }
+
+  const { data, error } = await supabase.auth.signUp({
+    email, password,
+    options: { data: { full_name: fullName, username: username } }
+  });
+
+  if(error){ showMsg(error.message, 'error'); }
+  else{ showMsg('Registration yayi nasara! Duba email ka don confirm', 'success'); }
+  
+  btn.disabled=false; btn.innerText='Continue';
+});
+
+// LOGIN
+document.getElementById('login').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = document.getElementById('loginBtn');
+  btn.disabled = true; btn.innerText = 'Loading...';
+
+  const email = document.getElementById('loginEmail').value;
+  const password = document.getElementById('loginPass').value;
+
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+
+  if(error){ showMsg(error.message, 'error'); }
+  else{ 
+    showMsg('Login yayi nasara!', 'success');
+    localStorage.setItem('user', JSON.stringify(data.user));
+    setTimeout(()=> window.location.href = 'welcome.html', 1000);
+  }
+  
+  btn.disabled=false; btn.innerText='Login';
+});
+</script>
+
+</body>
+                                          </html>
