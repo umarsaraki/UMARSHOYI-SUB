@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UMARSHOYI-SUB</title>
+    <style>
+        body { font-family: sans-serif; background: #eef2f7; margin: 0; display: flex; justify-content: center; }
+        .app-container { width: 350px; background: white; min-height: 100vh; box-shadow: 0 0 10px rgba(0,0,0,0.1); position: relative; }
+        .header { background: #007bff; color: white; padding: 20px; text-align: center; border-radius: 0 0 20px 20px; }
+        .logo-box { background: #000; color: #d4af37; width: 60px; height: 60px; border-radius: 50%; margin: 10px auto; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 20px; }
+        .btn { width: 90%; padding: 12px; margin: 10px; border: none; border-radius: 10px; background: #000080; color: white; font-weight: bold; }
+        .nav-bottom { position: fixed; bottom: 0; width: 350px; background: white; display: flex; justify-content: space-around; padding: 10px; border-top: 1px solid #ddd; }
+        .hidden { display: none; }
+        .card { padding: 20px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 10px; }
+        .feature-box { background: #f8f9fa; padding: 15px; border-radius: 10px; text-align: center; border: 1px solid #ddd; }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <!-- LOGIN SCREEN -->
+    <div id="login-screen" class="card">
+        <div class="logo-box">US</div>
+        <h3>Login</h3>
+        <input type="text" placeholder="Username" class="btn" style="background:#fff; color:#000; border:1px solid #ccc;">
+        <input type="password" placeholder="Password" class="btn" style="background:#fff; color:#000; border:1px solid #ccc;">
+        <button class="btn" onclick="showScreen('dashboard-screen')">Login</button>
+    </div>
+
+    <!-- DASHBOARD SCREEN -->
+    <div id="dashboard-screen" class="hidden">
+        <div class="header">Good Evening ✋</div>
+        <div class="grid">
+            <div class="feature-box">Data Bundle</div>
+            <div class="feature-box">Airtime</div>
+            <div class="feature-box">Cable</div>
+            <div class="feature-box">Electricity</div>
+        </div>
+    </div>
+
+    <!-- PROFILE SCREEN -->
+    <div id="profile-screen" class="hidden" class="card">
+        <h3>Profile</h3>
+        <p>User Settings</p>
+        <button class="btn" style="background: red;" onclick="showScreen('login-screen')">Logout</button>
+    </div>
+
+    <!-- NAVIGATION -->
+    <div class="nav-bottom">
+        <div onclick="showScreen('dashboard-screen')">Home</div>
+        <div onclick="showScreen('profile-screen')">Profile</div>
+    </div>
+</div>
+
+<script>
+    function showScreen(screenId) {
+        document.getElementById('login-screen').classList.add('hidden');
+        document.getElementById('dashboard-screen').classList.add('hidden');
+        document.getElementById('profile-screen').classList.add('hidden');
+        document.getElementById(screenId).classList.remove('hidden');
+    }
+</script>
+
+</body>
+</html>
