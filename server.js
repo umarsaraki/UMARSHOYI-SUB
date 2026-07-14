@@ -7,9 +7,8 @@ const PORT = process.env.PORT || 10000;
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static('.')); // Wannan zai serve index.html
+app.use(express.static('.')); 
 
-// API
 app.all('/', async (req, res) => {
     const type = req.query.type;
     if(type == 'get_history') return res.json({data: []});
