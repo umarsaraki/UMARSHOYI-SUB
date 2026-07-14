@@ -1,6 +1,5 @@
 import express from 'express';
 import cors from 'cors';
-import path from 'path';
 
 const app = express();
 const PORT = process.env.PORT || 10000;
@@ -8,6 +7,10 @@ const PORT = process.env.PORT || 10000;
 app.use(cors());
 app.use(express.json());
 app.use(express.static('.')); 
+
+app.post('/login', async (req, res) => {
+    res.json({status: 'success', message: 'Login route working'});
+});
 
 app.all('/', async (req, res) => {
     const type = req.query.type;
