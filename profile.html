@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profile</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+<div class="card">
+  <div class="header"><span onclick="window.location.href='index.html'">←</span><h2>Profile</h2></div>
+  <img src="https://i.imgur.com/8Km9tLL.png" class="avatar">
+  <p id="profileName">USERNAME</p>
+
+  <div class="profile-list">
+    <div onclick="document.getElementById('changePinPage').style.display='block'"><p>🔒 Change Transaction Pin</p></div>
+    <div onclick="document.getElementById('changePassPage').style.display='block'"><p>🔑 Change Password</p></div>
+    <div onclick="document.getElementById('helpPage').style.display='block'"><p>❓ Help Center</p></div>
+    <div><p>👆 Biometrics</p><input type="checkbox" id="bioToggle" onchange="toggleBio()"></div>
+    <button class="btn-red" onclick="logout()">Logout</button>
+  </div>
+
+  <div id="changePinPage" style="display:none"><input type="password" id="oldPin" maxlength="4" placeholder="Old Pin"><input type="password" id="newPin" maxlength="4" placeholder="New Pin"><input type="password" id="confirmPin" maxlength="4" placeholder="Confirm Pin"><button onclick="changePin()">Save</button></div>
+  <div id="changePassPage" style="display:none"><input type="password" id="oldPass" placeholder="Old Password"><input type="password" id="newPass" placeholder="New Password"><button onclick="changePassword()">Save</button></div>
+  <div id="helpPage" style="display:none"><p>Contact Admin:</p><p>+2349073342170</p><p>+2349153233200</p></div>
+
+  <div class="bottom-nav">
+    <div onclick="window.location.href='index.html'"><span>🏠</span><p>Home</p></div>
+    <div class="active"><span>👤</span><p>Profile</p></div>
+  </div>
+</div>
+<script src="script.js"></script>
+</body>
+</html>
