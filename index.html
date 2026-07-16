@@ -56,7 +56,7 @@
     <h1>₦ <span id="balance">0.00</span></h1>
   </div>
 
-  <button class="btn" onclick="window.location.href='wallet.html'">💳 Fund Wallet</button>
+  <button class="btn" onclick="window.location.href='wallet.html'">💳 Add Money</button>
 
   <h3>Features</h3>
   <div class="features">
@@ -94,7 +94,12 @@
 <!-- AIRTIME PAGE -->
 <div id="airtimePage" class="page">
   <div class="card"><div class="header"><span onclick="showPage('dashboardPage')">←</span><h2>Buy Airtime</h2></div>
-  <div class="networks">SAME</div>
+  <div class="networks">
+    <div class="net active" data-net="MTN" onclick="selectNet(this,'MTN')"><img src="https://upload.wikimedia.org/wikipedia/commons/8/8a/MTN_Logo.svg"></div>
+    <div class="net" data-net="GLO" onclick="selectNet(this,'GLO')"><img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Glo_Logo.svg"></div>
+    <div class="net" data-net="AIRTEL" onclick="selectNet(this,'AIRTEL')"><img src="https://upload.wikimedia.org/wikipedia/commons/7/7e/Airtel_logo.svg"></div>
+    <div class="net" data-net="9MOBILE" onclick="selectNet(this,'9MOBILE')"><img src="https://upload.wikimedia.org/wikipedia/commons/9/9a/9mobile_logo.svg"></div>
+  </div>
   <input type="tel" id="airtimePhone" placeholder="Phone Number" onkeyup="detectNetwork(this.value,'airtime')">
   <input type="number" id="airtimeAmount" placeholder="Amount">
   <button onclick="showConfirm('Airtime')">Purchase</button></div>
@@ -125,4 +130,4 @@
 
 <script src="script.js"></script>
 </body>
-                                                                                                                     </html>
+</html>
