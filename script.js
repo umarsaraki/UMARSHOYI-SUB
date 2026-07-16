@@ -69,7 +69,7 @@ async function loginUser(){
   const {data,error} = await supabaseClient.auth.signInWithPassword({email:document.getElementById('loginEmail').value,password:document.getElementById('loginPassword').value})
   if(error){document.getElementById('loginError').innerText="Login Failed"}else{
     currentUser=data.user;showPage('dashboardPage');
-    let username=data.user_metadata.username;
+    let username=data.user_metadata.username || data.user.email.split('@')[0];
     document.getElementById('username').innerText=username.toUpperCase();
     document.getElementById('profileName').innerText=username.toUpperCase();
     document.getElementById('refCode').innerText=username;
@@ -89,12 +89,13 @@ function changePin(){}
 function changePassword(){}
 
 supabaseClient.auth.getSession().then(({ data: { session }}) => {
-  if(session && document.getElementById('refCode')){
+  if(session){
     currentUser=session.user;
     showPage('dashboardPage');
-    let u=session.user_metadata.username;
-    document.getElementById('refCode').innerText=u;
+    let u=session.user.user_metadata.username || session.user.email.split('@')[0];
+    if(document.getElementById('refCode')) document.getElementById('refCode').innerText=u;
     if(document.getElementById('profileName')) document.getElementById('profileName').innerText=u.toUpperCase();
+    if(document.getElementById('username')) document.getElementById('username').innerText=u.toUpperCase();
     getBalance();
   }
 })
