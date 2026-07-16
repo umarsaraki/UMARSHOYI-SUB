@@ -29,7 +29,7 @@
     <input type="text" id="regUsername" placeholder="Username">
     <input type="email" id="regEmail" placeholder="Email">
     <input type="tel" id="regPhone" placeholder="Phone Number">
-    <input type="password" id="regPin" maxlength="4" placeholder="Transaction PIN 4 Digits">
+    <input type="password" id="regPin" maxlength="4" placeholder="Security Code 4 Digits">
     <input type="password" id="regPassword" placeholder="Password">
     <input type="password" id="regConfirmPassword" placeholder="Confirm Password">
     <input type="text" id="regReferral" placeholder="Referral Username (Optional)">
@@ -79,7 +79,7 @@
 
 <!-- DATA PAGE -->
 <div id="dataPage" class="page">
-  <div class="card"><div class="header"><span onclick="showPage('dashboardPage')">←</span><h2>Buy Data</h2></div>
+  <div class="card"><div class="header"><span onclick="showPage('dashboardPage')">←</span><h2>Top Up Data</h2></div>
   <div class="networks">
     <div class="net active" data-net="MTN" onclick="selectNet(this,'MTN')"><img src="https://upload.wikimedia.org/wikipedia/commons/8/8a/MTN_Logo.svg"></div>
     <div class="net" data-net="GLO" onclick="selectNet(this,'GLO')"><img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Glo_Logo.svg"></div>
@@ -93,7 +93,7 @@
 
 <!-- AIRTIME PAGE -->
 <div id="airtimePage" class="page">
-  <div class="card"><div class="header"><span onclick="showPage('dashboardPage')">←</span><h2>Buy Airtime</h2></div>
+  <div class="card"><div class="header"><span onclick="showPage('dashboardPage')">←</span><h2>Top Up Airtime</h2></div>
   <div class="networks">
     <div class="net active" data-net="MTN" onclick="selectNet(this,'MTN')"><img src="https://upload.wikimedia.org/wikipedia/commons/8/8a/MTN_Logo.svg"></div>
     <div class="net" data-net="GLO" onclick="selectNet(this,'GLO')"><img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Glo_Logo.svg"></div>
@@ -102,22 +102,22 @@
   </div>
   <input type="tel" id="airtimePhone" placeholder="Phone Number" onkeyup="detectNetwork(this.value,'airtime')">
   <input type="number" id="airtimeAmount" placeholder="Amount">
-  <button onclick="showConfirm('Airtime')">Purchase</button></div>
+  <button onclick="showConfirm('Airtime')">Continue</button></div>
 </div>
 
 <!-- SAURAN FEATURES -->
 <div id="airtimeCashPage" class="page"><div class="card"><div class="header"><span onclick="showPage('dashboardPage')">←</span><h2>Airtime to Cash</h2></div>
 <input type="tel" id="acNumber" placeholder="Sender Number"><input type="number" id="acAmount" placeholder="Amount"><button onclick="convertAirtime()">Convert</button></div></div>
 <div id="electricityPage" class="page"><div class="card"><div class="header"><span onclick="showPage('dashboardPage')">←</span><h2>Electricity</h2></div>
-<select id="elecBiller"><option>IKEDC</option><option>EKEDC</option></select><input id="elecMeter" placeholder="Meter Number"><input type="number" id="elecAmount" placeholder="Amount"><button onclick="showConfirm('Electricity')">Buy Now</button></div></div>
+<select id="elecBiller"><option>IKEDC</option><option>EKEDC</option></select><input id="elecMeter" placeholder="Meter Number"><input type="number" id="elecAmount" placeholder="Amount"><button onclick="showConfirm('Electricity')">Continue</button></div></div>
 <div id="cablePage" class="page"><div class="card"><div class="header"><span onclick="showPage('dashboardPage')">←</span><h2>Cable TV</h2></div>
-<select id="cableBiller" onchange="getPlans('cable', this.value)"><option>DSTV</option><option>GOTV</option></select><input id="cableCard" placeholder="Smart Card"><div id="cablePlans"></div><button onclick="showConfirm('Cable')">Buy Now</button></div></div>
-<div id="examPage" class="page"><div class="card"><div class="header"><span onclick="showPage('dashboardPage')">←</span><h2>Exam Pin</h2></div>
-<select id="examType" onchange="getPlans('exam', this.value)"><option>WAEC</option><option>JAMB</option></select><div id="examPlans"></div><input type="number" id="examQty" placeholder="Quantity"><button onclick="showConfirm('Exam')">Purchase</button></div></div>
+<select id="cableBiller" onchange="getPlans('cable', this.value)"><option>DSTV</option><option>GOTV</option></select><input id="cableCard" placeholder="Smart Card"><div id="cablePlans"></div><button onclick="showConfirm('Cable')">Continue</button></div></div>
+<div id="examPage" class="page"><div class="card"><div class="header"><span onclick="showPage('dashboardPage')">←</span><h2>Exam Token</h2></div>
+<select id="examType" onchange="getPlans('exam', this.value)"><option>WAEC</option><option>JAMB</option></select><div id="examPlans"></div><input type="number" id="examQty" placeholder="Quantity"><button onclick="showConfirm('Exam')">Continue</button></div></div>
 <div id="datacardPage" class="page"><div class="card"><div class="header"><span onclick="showPage('dashboardPage')">←</span><h2>Data Card</h2></div>
-<select id="dcPlan" onchange="getPlans('datacard', this.value)"><option>MTN</option><option>GLO</option></select><div id="dcPlans"></div><input type="number" id="dcQty" placeholder="Quantity"><input id="dcName" placeholder="Card Name"><button onclick="showConfirm('Data Card')">Purchase</button></div></div>
+<select id="dcPlan" onchange="getPlans('datacard', this.value)"><option>MTN</option><option>GLO</option></select><div id="dcPlans"></div><input type="number" id="dcQty" placeholder="Quantity"><input id="dcName" placeholder="Card Name"><button onclick="showConfirm('Data Card')">Continue</button></div></div>
 <div id="airtimecardPage" class="page"><div class="card"><div class="header"><span onclick="showPage('dashboardPage')">←</span><h2>Airtime Card</h2></div>
-<select id="acardNet" onchange="getPlans('airtimecard', this.value)"><option>MTN</option><option>GLO</option></select><div id="acardPlans"></div><input type="number" id="acardQty" placeholder="Quantity"><button onclick="showConfirm('Airtime Card')">Purchase</button></div></div>
+<select id="acardNet" onchange="getPlans('airtimecard', this.value)"><option>MTN</option><option>GLO</option></select><div id="acardPlans"></div><input type="number" id="acardQty" placeholder="Quantity"><button onclick="showConfirm('Airtime Card')">Continue</button></div></div>
 <div id="referPage" class="page"><div class="card"><div class="header"><span onclick="showPage('dashboardPage')">←</span><h2>Refer & Earn</h2></div>
 <div class="refer-box"><div><p>Your Referral Code</p><b id="refCode" style="font-size:20px">LOADING...</b></div><button class="copy-btn" onclick="copyRef()">Copy</button></div></div></div>
 
@@ -125,9 +125,9 @@
 <div id="confirmModal" class="modal"><h3>Confirm Transaction</h3>
 <p>Network: <b id="cNet"></b></p><p>Details: <b id="cDetail"></b></p><p>Amount: <b id="cAmount"></b></p>
 <button onclick="showPin()">Continue</button><button class="btn-grey" onclick="closeModal()">Cancel</button></div>
-<div id="pinModal" class="modal"><h3>Enter PIN</h3>
-<input type="password" id="pinInput" maxlength="4"><button onclick="submitPin()">Pay Now</button><button class="btn-grey" onclick="closeModal()">Cancel</button></div>
+<div id="pinModal" class="modal"><h3>Enter Security Code</h3>
+<input type="password" id="pinInput" maxlength="4"><button onclick="submitPin()">Continue</button><button class="btn-grey" onclick="closeModal()">Cancel</button></div>
 
 <script src="script.js"></script>
 </body>
-</html>
+  </html>
