@@ -1,390 +1,128 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UMARSHOYI-SUB</title>
-    <style>
-        *{margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', sans-serif}
-        body{background:#f4f7fc; min-height:100vh; display:flex; justify-content:center}
-.app-container{width:100%; max-width:480px; min-height:100vh; position:relative; padding-bottom:80px}
-.page{display:none; padding:20px}.active{display:block}
-.topbar{background:#0A1A7A; color:white; padding:20px 20px; border-radius:0 0 30px 30px; display:flex; align-items:center; justify-content:space-between}
-.topbar-left{display:flex; align-items:center}
-.back-btn{font-size:24px; margin-right:15px; cursor:pointer}
-.notif-bell{font-size:26px; cursor:pointer; position:relative}
-.notif-badge{position:absolute; top:-5px; right:-5px; background:red; color:white; font-size:10px; padding:2px 6px; border-radius:50%; display:none}
-.btn{width:100%; padding:20px; margin:10px 0; border:none; border-radius:15px; background:#0A1A7A; color:white; font-size:18px; font-weight:bold; cursor:pointer}
-.btn-blue{width:100%; padding:18px; margin:10px 0; border:none; border-radius:12px; background:#00008B; color:white; font-size:16px; font-weight:bold; cursor:pointer}
-.input{width:100%; padding:20px; margin:10px 0; border:2px solid #ddd; border-radius:15px; font-size:16px}
-.box{background:white; padding:25px; border-radius:20px; margin:15px 0; box-shadow:0 4px 10px rgba(0,0,0,0.1)}
-.features{display:grid; grid-template-columns: repeat(3, 1fr); gap:15px; margin-top:20px}
-.feature{background:white; padding:25px 10px; text-align:center; border-radius:20px; cursor:pointer; font-size:14px; font-weight:600; box-shadow:0 4px 10px rgba(0,0,0,0.1)}
-        #nav-menu{display:none; position:fixed; bottom:0; width:100%; max-width:480px; background:white; justify-content:space-around; padding:20px; border-top:2px solid #eee; font-size:18px}
-.toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #ff3b30; color: white; padding: 14px 22px; border-radius: 10px; z-index: 9999; display: none; font-weight: 600; }
-.toast.success { background: #34c759; }
-.network-logos{display:flex; gap:12px; justify-content:center; margin:15px 0}
-.net-logo{width:70px; height:70px; padding:8px; background:white; border-radius:15px; display:flex; align-items:center; justify-content:center; cursor:pointer; border:3px solid transparent; box-shadow:0 2px 8px rgba(0,0,0,0.1); font-weight:bold}
-.net-logo.active{border-color:#0A1A7A}
-.plan-tabs{display:flex; gap:10px; margin:15px 0; flex-wrap:wrap}
-.plan-tab{padding:12px 18px; border:2px solid #0A1A7A; border-radius:25px; background:white; color:#0A1A7A; font-weight:600; cursor:pointer}
-.plan-tab.active{background:#0A1A7A; color:white}
-.history-item{background:white; padding:15px; margin:10px 0; border-radius:12px; box-shadow:0 2px 5px rgba(0,0,0,0.1)}
-.toggle-switch{width:60px; height:30px; background:#ccc; border-radius:30px; position:relative; cursor:pointer}
-.toggle-switch.active{background:#28a745}
-.toggle-switch::after{content:''; width:26px; height:26px; background:white; border-radius:50%; position:absolute; top:2px; left:2px; transition:0.3s}
-.toggle-switch.active::after{left:32px}
-.loading{opacity:0.5; pointer-events:none}
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>UMARSHOYI SUB</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-<div class="app-container">
-    <div id="login-page" class="page active">
-        <div class="box" style="margin-top:100px">
-            <h2>Login</h2>
-            <input class="input" id="login-email" placeholder="Email">
-            <input class="input" type="password" id="login-password" placeholder="Password">
-            <button class="btn" id="login-btn">Login</button>
-            <p id="go-register" style="text-align:center; cursor:pointer; color:#0A1A7A; margin-top:15px">Sign Up</p>
-        </div>
-    </div>
 
-    <div id="register-page" class="page">
-        <div class="box">
-            <h2>Register</h2>
-            <input class="input" id="reg-name" placeholder="Full Name">
-            <input class="input" id="reg-username" placeholder="Username">
-            <input class="input" id="reg-phone" placeholder="Phone Number">
-            <input class="input" id="reg-email" placeholder="Email">
-            <input class="input" id="reg-ref" placeholder="Referral Username">
-            <input class="input" type="password" id="reg-pass" placeholder="Password">
-            <input class="input" type="password" id="reg-pin" placeholder="Transaction PIN - 4 Digits" maxlength="4">
-            <button class="btn" id="register-btn">Register</button>
-            <p id="go-login" style="text-align:center; cursor:pointer; color:#0A1A7A; margin-top:15px">Already have account? Login</p>
-        </div>
-    </div>
-
-    <div id="dashboard-page" class="page">
-        <div class="topbar">
-            <div class="topbar-left"><h3>Welcome, <span id="display-user">User</span></h3></div>
-            <div class="notif-bell" id="notif-bell">🔔<span class="notif-badge" id="notif-count"></span></div>
-        </div>
-        <div class="box">
-            <p>Wallet Balance</p><h2 id="balance">₦0.00</h2>
-            <button class="btn" style="background:#28a745" id="fund-btn">Fund Wallet</button>
-            <button class="btn" style="background:#17a2b8" id="history-btn">📜 Purchase History</button>
-        </div>
-        <div class="features">
-            <div class="feature" data-service="Data">📊<br>Data</div>
-            <div class="feature" data-service="Airtime">📱<br>Airtime</div>
-            <div class="feature" data-service="Cable">📺<br>Cable</div>
-            <div class="feature" data-service="Light">💡<br>Light</div>
-            <div class="feature" data-service="A2Cash">💰<br>A2Cash</div>
-            <div class="feature" data-service="DataCard">📶<br>Data Card</div>
-            <div class="feature" data-service="AirtimeCard">🎫<br>Airtime Card</div>
-            <div class="feature" data-service="Exam">📝<br>Exam</div>
-            <div class="feature" data-service="Referral">👥<br>Referral</div>
-        </div>
-    </div>
-
-    <div id="service-page" class="page" style="min-height:100vh; background:#f4f7fc">
-        <div class="topbar">
-            <div class="topbar-left"><span class="back-btn" id="back-btn">←</span><h2 id="service-title">Service</h2></div>
-            <div class="notif-bell" id="notif-bell2">🔔</div>
-        </div>
-        <div style="padding:20px" id="service-content"></div>
-    </div>
-
-    <div id="profile-page" class="page" style="min-height:100vh; background:white">
-        <div class="topbar">
-            <div class="topbar-left"><span class="back-btn" id="back-btn2">←</span><h2>Profile</h2></div>
-            <div class="notif-bell" id="notif-bell3">🔔</div>
-        </div>
-        <div style="padding:30px">
-            <div data-service="Change Password" style="font-size:20px; margin:20px 0; cursor:pointer">⚙️ Change Password</div>
-            <div data-service="Transaction PIN" style="font-size:20px; margin:20px 0; cursor:pointer">💳 Transaction PIN</div>
-            <div data-service="Biometric" style="font-size:20px; margin:20px 0; cursor:pointer">🔐 Biometric</div>
-            <div data-service="Support" style="font-size:20px; margin:20px 0; cursor:pointer">📞 Support Center</div>
-            <button class="btn" style="background:red" id="logout-btn">Logout</button>
-        </div>
-    </div>
-
-    <div id="nav-menu">
-        <div id="nav-home">🏠 Home</div>
-        <div id="nav-profile">👤 Profile</div>
-    </div>
+<!-- LOGIN PAGE -->
+<div id="loginPage" class="page active">
+  <div class="card">
+    <h2>Login</h2>
+    <input type="email" id="loginEmail" placeholder="Email">
+    <input type="password" id="loginPassword" placeholder="Password">
+    <button onclick="loginUser()">Login</button>
+    <p id="loginError" class="error"></p>
+    <p onclick="showPage('registerPage')">Don't have account? Sign Up</p>
+  </div>
 </div>
 
-<script type="module">
-    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
-    const supabase = createClient('https://lvlbxliuqrgyizxjmmyx.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx2bGJ4bGl1cXJneWl6eGptbXl4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM1MDc1OTYsImV4cCI6MjA5OTA4MzU5Nn0.cewsOlpdXupidG2tfiaqOIWvT3FSBgXuW9jQka6JzmA')
+<!-- REGISTER PAGE -->
+<div id="registerPage" class="page">
+  <div class="card">
+    <h2>Register</h2>
+    <input type="text" id="regName" placeholder="Full Name">
+    <input type="text" id="regUsername" placeholder="Username">
+    <input type="email" id="regEmail" placeholder="Email">
+    <input type="tel" id="regPhone" placeholder="Phone Number">
+    <input type="password" id="regPin" maxlength="4" placeholder="Transaction PIN 4 Digits">
+    <input type="password" id="regPassword" placeholder="Password">
+    <input type="password" id="regConfirmPassword" placeholder="Confirm Password">
+    <input type="text" id="regReferral" placeholder="Referral Username (Optional)">
+    <button onclick="registerUser()">Register</button>
+    <p id="regError" class="error"></p>
+    <p onclick="showPage('loginPage')">Already have account? Login</p>
+  </div>
+</div>
 
-    const API_URL = "https://umarshoyi-sub.onrender.com"
-    let currentUser = null;
-    let selectedNetwork = '';
-    let notifications = [];
+<!-- DASHBOARD PAGE -->
+<div id="dashboardPage" class="page">
+  <div class="topbar">
+    <div class="user-info">
+      <img src="https://i.imgur.com/8Km9tLL.png">
+      <div>
+        <p id="greeting">Good Morning 👋</p>
+        <h3 id="username">USER</h3>
+      </div>
+    </div>
+  </div>
 
-    function showToast(msg, type = 'error'){ let toast = document.getElementById('toast'); if(!toast){ toast = document.createElement('div'); toast.id = 'toast'; toast.className = 'toast'; document.body.appendChild(toast); } toast.innerText = msg; toast.className = `toast ${type}`; toast.style.display = 'block'; setTimeout(() => toast.style.display = 'none', 3000); }
-    const showPage = (id) => { document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.getElementById(id).classList.add('active') }
+  <div class="balance-card">
+    <p>Wallet Balance</p>
+    <h1>₦ <span id="balance">0.00</span></h1>
+  </div>
 
-    async function callAPI(type, body){
-        try{
-            const res = await fetch(`${API_URL}?type=${type}`, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({...body, user_id: currentUser.id})
-            });
-            return await res.json();
-        }catch(e){
-            showToast("Network Error");
-            return {success: false}
-        }
-    }
+  <button class="btn" onclick="window.location.href='wallet.html'">💳 Fund Wallet</button>
 
-    function updateNotifBadge(){
-        const unread = notifications.filter(n =>!n.read).length;
-        const badge = document.getElementById('notif-count');
-        if(unread > 0){ badge.style.display = 'block'; badge.innerText = unread; }
-        else{ badge.style.display = 'none'; }
-    }
+  <h3>Features</h3>
+  <div class="features">
+    <div class="feature" onclick="showPage('dataPage')"><div>📊</div><p>Data</p></div>
+    <div class="feature" onclick="showPage('airtimePage')"><div>📱</div><p>Airtime</p></div>
+    <div class="feature" onclick="showPage('airtimeCashPage')"><div>💵</div><p>Airtime2Cash</p></div>
+    <div class="feature" onclick="showPage('electricityPage')"><div>💡</div><p>Electricity</p></div>
+    <div class="feature" onclick="showPage('cablePage')"><div>📺</div><p>Cable</p></div>
+    <div class="feature" onclick="showPage('examPage')"><div>📝</div><p>Exam</p></div>
+    <div class="feature" onclick="showPage('datacardPage')"><div>🎫</div><p>Data Card</p></div>
+    <div class="feature" onclick="showPage('airtimecardPage')"><div>💳</div><p>Airtime Card</p></div>
+    <div class="feature" onclick="showPage('referPage')"><div>₦</div><p>Refer & Earn</p></div>
+  </div>
 
-    const detectNetwork = (num) => {
-        if(num.startsWith('0803')||num.startsWith('0806')||num.startsWith('0703')||num.startsWith('0706')||num.startsWith('0813')||num.startsWith('0816')||num.startsWith('0810')||num.startsWith('0814')||num.startsWith('0903')||num.startsWith('0906')) return 'MTN';
-        if(num.startsWith('0805')||num.startsWith('0807')||num.startsWith('0705')||num.startsWith('0815')||num.startsWith('0811')||num.startsWith('0905')) return 'GLO';
-        if(num.startsWith('0802')||num.startsWith('0808')||num.startsWith('0708')||num.startsWith('0812')||num.startsWith('0902')||num.startsWith('0907')||num.startsWith('0901')) return 'AIRTEL';
-        if(num.startsWith('0809')||num.startsWith('0817')||num.startsWith('0818')||num.startsWith('0909')||num.startsWith('0908')) return '9MOBILE';
-        return '';
-    }
+  <div class="bottom-nav">
+    <div class="active"><span>🏠</span><p>Home</p></div>
+    <div onclick="window.location.href='profile.html'"><span>👤</span><p>Profile</p></div>
+  </div>
+</div>
 
-    const openService = async (s) => {
-        document.getElementById('service-title').innerText = s; let c = '';
+<!-- DATA PAGE -->
+<div id="dataPage" class="page">
+  <div class="card"><div class="header"><span onclick="showPage('dashboardPage')">←</span><h2>Buy Data</h2></div>
+  <div class="networks">
+    <div class="net active" data-net="MTN" onclick="selectNet(this,'MTN')"><img src="https://upload.wikimedia.org/wikipedia/commons/8/8a/MTN_Logo.svg"></div>
+    <div class="net" data-net="GLO" onclick="selectNet(this,'GLO')"><img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Glo_Logo.svg"></div>
+    <div class="net" data-net="AIRTEL" onclick="selectNet(this,'AIRTEL')"><img src="https://upload.wikimedia.org/wikipedia/commons/7/7e/Airtel_logo.svg"></div>
+    <div class="net" data-net="9MOBILE" onclick="selectNet(this,'9MOBILE')"><img src="https://upload.wikimedia.org/wikipedia/commons/9/9a/9mobile_logo.svg"></div>
+  </div>
+  <input type="tel" id="dataPhone" placeholder="Phone Number" onkeyup="detectNetwork(this.value,'data')">
+  <div id="dataPlans">Select Network</div>
+  <button onclick="showConfirm('Data')">Continue</button></div>
+</div>
 
-        if(s == 'Fund Wallet') c = `<input class="input" id="fund-amount" type="number" placeholder="Enter Amount"><button class="btn" id="fund-proceed">Proceed to Flutterwave</button>`;
-        else if(s == 'Data') c = `<div class="network-logos"><div class="net-logo" data-net="MTN">MTN</div><div class="net-logo" data-net="GLO">GLO</div><div class="net-logo" data-net="AIRTEL">AIRTEL</div><div class="net-logo" data-net="9MOBILE">9MOBILE</div></div><div class="plan-tabs"><div class="plan-tab active">SME</div><div class="plan-tab">GIFTING</div><div class="plan-tab">GIFTING PRO</div></div><input class="input" id="data-phone" placeholder="Mobile Number"><select class="input" id="data-plan"><option>Loading plans...</option></select><input class="input" type="password" id="data-pin" placeholder="Transaction PIN"><button class="btn-blue" id="buy-data-btn">Purchase</button>`;
-        else if(s == 'Airtime') c = `<div class="network-logos"><div class="net-logo" data-net="MTN">MTN</div><div class="net-logo" data-net="GLO">GLO</div><div class="net-logo" data-net="AIRTEL">AIRTEL</div><div class="net-logo" data-net="9MOBILE">9MOBILE</div></div><input class="input" id="airtime-phone" placeholder="Mobile Number"><input class="input" id="airtime-amount" type="number" placeholder="Amount"><input class="input" type="password" id="airtime-pin" placeholder="Transaction PIN"><button class="btn-blue" id="buy-airtime-btn">Purchase</button>`;
-        else if(s == 'Cable') c = `<div class="network-logos"><div class="net-logo" data-net="DSTV">DSTV</div><div class="net-logo" data-net="GOTV">GOTV</div><div class="net-logo" data-net="STARTIMES">STARTIMES</div></div><select class="input" id="cable-bouquet"><option>Loading...</option></select><input class="input" id="cable-smart" placeholder="Smart Card Number / IUC"><input class="input" id="cable-amount" type="number" placeholder="Amount"><input class="input" type="password" id="cable-pin" placeholder="Transaction PIN"><button class="btn-blue" id="buy-cable-btn">Purchase</button>`;
-        else if(s == 'Light') c = `<select class="input" id="light-biller"><option>IKEDC</option><option>KEDCO</option><option>PHED</option></select><div class="plan-tabs"><div class="plan-tab active">PREPAID</div><div class="plan-tab">POSTPAID</div></div><input class="input" id="light-meter" placeholder="Meter Number"><input class="input" id="light-amount" type="number" placeholder="Amount"><input class="input" type="password" id="light-pin" placeholder="Transaction PIN"><button class="btn-blue" id="buy-light-btn">Purchase</button>`;
-        else if(s == 'A2Cash') c = `<input class="input" id="a2cash-user" placeholder="Receiver Username"><input class="input" id="a2cash-amount" type="number" placeholder="Amount"><input class="input" type="password" id="a2cash-pin" placeholder="Transaction PIN"><button class="btn-blue" id="a2cash-btn">Send Money</button>`;
-        else if(s == 'AirtimeCard') c = `<div class="network-logos"><div class="net-logo" data-net="MTN">MTN</div><div class="net-logo" data-net="GLO">GLO</div><div class="net-logo" data-net="AIRTEL">AIRTEL</div><div class="net-logo" data-net="9MOBILE">9MOBILE</div></div><select class="input" id="airtimecard-amount"><option>₦100</option><option>₦200</option><option>₦500</option><option>₦1000</option></select><input class="input" id="airtimecard-qty" type="number" placeholder="Quantity"><input class="input" type="password" id="airtimecard-pin" placeholder="Transaction PIN"><button class="btn-blue" id="buy-airtimecard-btn">Purchase</button>`;
-        else if(s == 'DataCard') c = `<div class="network-logos"><div class="net-logo" data-net="MTN">MTN</div><div class="net-logo" data-net="GLO">GLO</div></div><input class="input" id="datacard-plan" placeholder="Plan Code"><input class="input" id="datacard-qty" type="number" placeholder="Quantity"><input class="input" type="password" id="datacard-pin" placeholder="Transaction PIN"><button class="btn-blue" id="buy-datacard-btn">Purchase</button>`;
-        else if(s == 'Exam') c = `<div class="network-logos"><div class="net-logo" data-net="WAEC">WAEC</div><div class="net-logo" data-net="JAMB">JAMB</div></div><input class="input" id="exam-qty" type="number" placeholder="Quantity"><input class="input" type="password" id="exam-pin" placeholder="Transaction PIN"><button class="btn-blue" id="buy-exam-btn">Purchase</button>`;
-        else if(s == 'History') {
-            const hist = await callAPI('get_history', {});
-            c = `<h3>Purchase History</h3>`;
-            if(!hist.data || hist.data.length == 0){ c += `<p style="text-align:center; margin-top:20px">No history yet</p>`; }
-            else{ hist.data.forEach(item => { c += `<div class="history-item"><p><b>${item.service}</b><br>${item.number || item.smart_card || ''}<br>₦${Math.abs(item.amount)} - ${new Date(item.created_at).toLocaleDateString()}<br>Status: <span style="color:green">${item.status}</span></p></div>`; }); }
-        }
-        else if(s == 'Support') c = `<div class="box"><h3>Contact Admin</h3><p style="margin:10px 0">WhatsApp: <a href="https://wa.me/2349073342170">+2349073342170</a></p><p>Call: <a href="tel:+2349153233200">+2349153233200</a></p></div>`;
-        else if(s == 'Referral') c = `<div class="box">Referral Code: <span id="ref-code"></span> <button onclick="navigator.clipboard.writeText(document.getElementById('ref-code').innerText)">Copy</button></div>`;
-        else if(s == 'Change Password') c = `<input class="input" type="password" id="old-pass" placeholder="Old Password"><input class="input" type="password" id="new-pass" placeholder="New Password"><button class="btn" id="save-pass-btn">Save</button>`;
-        else if(s == 'Transaction PIN') c = `<input class="input" type="password" id="old-pin" placeholder="Old 4 Digit PIN"><input class="input" type="password" id="new-pin" placeholder="New 4 Digit PIN" maxlength="4"><button class="btn" id="save-pin-btn">Save</button>`;
-        else if(s == 'Biometric') c = `<div style="display:flex; justify-content:space-between; align-items:center"><h3>Biometric Login</h3><div class="toggle-switch" id="bio-toggle"></div></div>`;
-        else if(s == 'Notifications') { c = `<h3>Notifications</h3>`; if(notifications.length == 0) c += `<p>No notifications</p>`; else{ notifications.forEach(n => { c += `<div class="history-item" style="background:${n.read?'white':'#e3f2fd'}"><p><b>${n.title}</b><br>${n.msg}</p></div>`; n.read = true; }); updateNotifBadge(); } }
+<!-- AIRTIME PAGE -->
+<div id="airtimePage" class="page">
+  <div class="card"><div class="header"><span onclick="showPage('dashboardPage')">←</span><h2>Buy Airtime</h2></div>
+  <div class="networks">SAME</div>
+  <input type="tel" id="airtimePhone" placeholder="Phone Number" onkeyup="detectNetwork(this.value,'airtime')">
+  <input type="number" id="airtimeAmount" placeholder="Amount">
+  <button onclick="showConfirm('Airtime')">Purchase</button></div>
+</div>
 
-        document.getElementById('service-content').innerHTML = c; showPage('service-page');
+<!-- SAURAN FEATURES -->
+<div id="airtimeCashPage" class="page"><div class="card"><div class="header"><span onclick="showPage('dashboardPage')">←</span><h2>Airtime to Cash</h2></div>
+<input type="tel" id="acNumber" placeholder="Sender Number"><input type="number" id="acAmount" placeholder="Amount"><button onclick="convertAirtime()">Convert</button></div></div>
+<div id="electricityPage" class="page"><div class="card"><div class="header"><span onclick="showPage('dashboardPage')">←</span><h2>Electricity</h2></div>
+<select id="elecBiller"><option>IKEDC</option><option>EKEDC</option></select><input id="elecMeter" placeholder="Meter Number"><input type="number" id="elecAmount" placeholder="Amount"><button onclick="showConfirm('Electricity')">Buy Now</button></div></div>
+<div id="cablePage" class="page"><div class="card"><div class="header"><span onclick="showPage('dashboardPage')">←</span><h2>Cable TV</h2></div>
+<select id="cableBiller" onchange="getPlans('cable', this.value)"><option>DSTV</option><option>GOTV</option></select><input id="cableCard" placeholder="Smart Card"><div id="cablePlans"></div><button onclick="showConfirm('Cable')">Buy Now</button></div></div>
+<div id="examPage" class="page"><div class="card"><div class="header"><span onclick="showPage('dashboardPage')">←</span><h2>Exam Pin</h2></div>
+<select id="examType" onchange="getPlans('exam', this.value)"><option>WAEC</option><option>JAMB</option></select><div id="examPlans"></div><input type="number" id="examQty" placeholder="Quantity"><button onclick="showConfirm('Exam')">Purchase</button></div></div>
+<div id="datacardPage" class="page"><div class="card"><div class="header"><span onclick="showPage('dashboardPage')">←</span><h2>Data Card</h2></div>
+<select id="dcPlan" onchange="getPlans('datacard', this.value)"><option>MTN</option><option>GLO</option></select><div id="dcPlans"></div><input type="number" id="dcQty" placeholder="Quantity"><input id="dcName" placeholder="Card Name"><button onclick="showConfirm('Data Card')">Purchase</button></div></div>
+<div id="airtimecardPage" class="page"><div class="card"><div class="header"><span onclick="showPage('dashboardPage')">←</span><h2>Airtime Card</h2></div>
+<select id="acardNet" onchange="getPlans('airtimecard', this.value)"><option>MTN</option><option>GLO</option></select><div id="acardPlans"></div><input type="number" id="acardQty" placeholder="Quantity"><button onclick="showConfirm('Airtime Card')">Purchase</button></div></div>
+<div id="referPage" class="page"><div class="card"><div class="header"><span onclick="showPage('dashboardPage')">←</span><h2>Refer & Earn</h2></div>
+<div class="refer-box"><div><p>Your Referral Code</p><b id="refCode" style="font-size:20px">LOADING...</b></div><button class="copy-btn" onclick="copyRef()">Copy</button></div></div></div>
 
-        if(s == 'Data' || s == 'Airtime' || s == 'AirtimeCard' || s == 'DataCard' || s == 'Exam' || s == 'Cable'){
-            document.querySelectorAll('.net-logo').forEach(l=>l.onclick=()=>{document.querySelectorAll('.net-logo').forEach(x=>x.classList.remove('active')); l.classList.add('active'); selectedNetwork=l.dataset.net});
-        }
-        if(s == 'Data') loadDataPlans();
-        if(s == 'Fund Wallet') document.getElementById('fund-proceed').onclick = fundWallet;
-        if(s == 'Data') document.getElementById('buy-data-btn').onclick = buyData;
-        if(s == 'Airtime') document.getElementById('buy-airtime-btn').onclick = buyAirtime;
-        if(s == 'Cable') document.getElementById('buy-cable-btn').onclick = buyCable;
-        if(s == 'Light') document.getElementById('buy-light-btn').onclick = buyLight;
-        if(s == 'A2Cash') document.getElementById('a2cash-btn').onclick = sendA2Cash;
-        if(s == 'AirtimeCard') document.getElementById('buy-airtimecard-btn').onclick = buyAirtimeCard;
-        if(s == 'DataCard') document.getElementById('buy-datacard-btn').onclick = buyDataCard;
-        if(s == 'Exam') document.getElementById('buy-exam-btn').onclick = buyExam;
-        if(s == 'Change Password') document.getElementById('save-pass-btn').onclick = changePassword;
-        if(s == 'Transaction PIN') document.getElementById('save-pin-btn').onclick = changePin;
-        if(s == 'Referral'){ const { data: { user } } = await supabase.auth.getUser(); if(user) document.getElementById('ref-code').innerText = user.email.split('@')[0]; }
-    }
+<!-- MODALS -->
+<div id="confirmModal" class="modal"><h3>Confirm Transaction</h3>
+<p>Network: <b id="cNet"></b></p><p>Details: <b id="cDetail"></b></p><p>Amount: <b id="cAmount"></b></p>
+<button onclick="showPin()">Continue</button><button class="btn-grey" onclick="closeModal()">Cancel</button></div>
+<div id="pinModal" class="modal"><h3>Enter PIN</h3>
+<input type="password" id="pinInput" maxlength="4"><button onclick="submitPin()">Pay Now</button><button class="btn-grey" onclick="closeModal()">Cancel</button></div>
 
-    ){ 
-  async function fundWallet(){
-  const amount = document.getElementById('fund-amount').value;
-  const res = await callAPI('fund_wallet', {email: currentUser.email, amount});
-  if(res.link) window.location.href = res.link;
-}
-
-async function buyData(){
-  const btn = document.getElementById('buy-data-btn');
-  btn.classList.add('loading');
-  const body = {
-    phone: document.getElementById('data-phone').value,
-    plan_code: document.getElementById('data-plan').value,
-    network: selectedNetwork,
-    amount: 100,
-    pin: document.getElementById('data-pin').value
-  };
-  const res = await callAPI('buy_data', body);
-  showToast(res.message);
-  btn.classList.remove('loading');
-  if(res.status=='success') loadBalance();
-}
-
-async function buyAirtime(){
-  const btn = document.getElementById('buy-airtime-btn');
-  btn.classList.add('loading');
-  const body = {
-    phone: document.getElementById('airtime-phone').value,
-    amount: document.getElementById('airtime-amount').value,
-    network: selectedNetwork,
-    pin: document.getElementById('airtime-pin').value
-  };
-  const res = await callAPI('buy_airtime', body);
-  showToast(res.message);
-  btn.classList.remove('loading');
-  if(res.status=='success') loadBalance();
-}
-
-async function buyCable(){
-  const body = {
-    smart_card: document.getElementById('cable-smart').value,
-    biller: selectedNetwork,
-    bouquet: document.getElementById('cable-bouquet').value,
-    amount: document.getElementById('cable-amount').value,
-    pin: document.getElementById('cable-pin').value
-  };
-  const res = await callAPI('buy_cable', body);
-  showToast(res.message);
-}
-
-async function buyLight(){
-  const body = {
-    meter_no: document.getElementById('light-meter').value,
-    biller: document.getElementById('light-biller').value,
-    amount: document.getElementById('light-amount').value,
-    pin: document.getElementById('light-pin').value
-  };
-  const res = await callAPI('buy_light', body);
-  showToast(res.message);
-}
-
-async function sendA2Cash(){
-  const body = {
-    receiver: document.getElementById('a2cash-user').value,
-    amount: document.getElementById('a2cash-amount').value,
-    pin: document.getElementById('a2cash-pin').value
-  };
-  const res = await callAPI('a2cash', body);
-  showToast(res.message);
-}
-
-async function buyAirtimeCard(){
-  const body = {
-    network: selectedNetwork,
-    amount: document.getElementById('airtimecard-amount').value.replace('₦',''),
-    qty: document.getElementById('airtimecard-qty').value,
-    pin: document.getElementById('airtimecard-pin').value
-  };
-  const res = await callAPI('buy_airtime_card', body);
-  showToast(res.message || res.status);
-}
-
-async function buyDataCard(){
-  const body = {
-    network: selectedNetwork,
-    plan: document.getElementById('datacard-plan').value,
-    qty: document.getElementById('datacard-qty').value,
-    pin: document.getElementById('datacard-pin').value
-  };
-  const res = await callAPI('buy_data_card', body);
-  showToast(res.message || res.status);
-}
-
-async function buyExam(){
-  const body = {
-    exam: selectedNetwork.toLowerCase(),
-    qty: document.getElementById('exam-qty').value,
-    pin: document.getElementById('exam-pin').value
-  };
-  const res = await callAPI('buy_exam', body);
-  showToast(res.message || res.status);
-}
-
-async function changePassword(){
-  const body = {
-    old_password: document.getElementById('old-pass').value,
-    new_password: document.getElementById('new-pass').value
-  };
-  const res = await callAPI('change_password', body);
-  showToast(res.message);
-}
-
-async function changePin(){
-  const body = {
-    old_pin: document.getElementById('old-pin').value,
-    new_pin: document.getElementById('new-pin').value
-  };
-  const res = await callAPI('change_pin', body);
-  showToast(res.message);
-}
-
-async function loadDataPlans(){
-    const res = await fetch(`${API_URL}?type=data_plans`);
-    const data = await res.json();
-    if(data.data) document.getElementById('data-plan').innerHTML = data.data.map(p=>`<option value="${p.plan}">${p.plan_name} - ₦${p.selling_price}</option>`).join('');
-}
-
-async function loadBalance(){
-  const { data: wallet } = await supabase.from('wallets').select('balance').eq('user_id', currentUser.id).single();
-  document.getElementById('balance').innerText = `₦${wallet?.balance || 0}`;
-}
-
-const signup = async () => {
-  const email = document.getElementById('reg-email').value;
-  const password = document.getElementById('reg-pass').value;
-  const pin = document.getElementById('reg-pin').value;
-  const { data, error } = await supabase.auth.signUp({ email, password });
-  if(error) { showToast(error.message); }
-  else {
-    await supabase.from('wallets').insert({user_id: data.user.id, balance: 0, transaction_pin: pin});
-    showToast("Account Created!", "success");
-    showPage('login-page');
-  }
-}
-
-const login = async () => {
-  const email = document.getElementById('login-email').value;
-  const password = document.getElementById('login-password').value;
-  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-  if(error) { showToast(error.message); }
-  else {
-    currentUser = data.user;
-    await loadBalance();
-    document.getElementById('display-user').innerText = data.user.email.split('@')[0];
-    document.getElementById('nav-menu').style.display = 'flex';
-    showPage('dashboard-page');
-  }
-}
-
-const logout = async () => {
-  await supabase.auth.signOut();
-  currentUser=null;
-  document.getElementById('nav-menu').style.display = 'none';
-  showPage('login-page');
-}
-
-document.getElementById('login-btn').addEventListener('click', login);
-document.getElementById('register-btn').addEventListener('click', signup);
-document.getElementById('logout-btn').addEventListener('click', logout);
-document.getElementById('go-register').addEventListener('click', () => showPage('register-page'));
-document.getElementById('go-login').addEventListener('click', () => showPage('login-page'));
-document.getElementById('fund-btn').addEventListener('click', () => openService('Fund Wallet'));
-document.getElementById('history-btn').addEventListener('click', () => openService('History'));
-document.getElementById('notif-bell').addEventListener('click', () => openService('Notifications'));
-document.getElementById('notif-bell2').addEventListener('click', () => openService('Notifications'));
-document.getElementById('notif-bell3').addEventListener('click', () => openService('Notifications'));
-document.getElementById('back-btn').addEventListener('click', () => showPage('dashboard-page'));
-document.getElementById('back-btn2').addEventListener('click', () => showPage('dashboard-page'));
-document.getElementById('nav-home').addEventListener('click', () => showPage('dashboard-page'));
-document.getElementById('nav-profile').addEventListener('click', () => showPage('profile-page'));
-document.querySelectorAll('.feature, [data-service]').forEach(btn => {
-  btn.addEventListener('click', (e) => openService(e.currentTarget.dataset.service));
-})
-
-</script>
+<script src="script.js"></script>
 </body>
-</html>
+                                                                                                                     </html>
